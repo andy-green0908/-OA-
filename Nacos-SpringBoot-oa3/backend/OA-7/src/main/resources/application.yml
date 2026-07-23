@@ -1,6 +1,8 @@
 spring:
   application:
     name: oa-admin-service
+  config:
+    import: optional:nacos:
   cloud:
     nacos:
       discovery:
