@@ -2,7 +2,7 @@ spring:
   application:
     name: oa-admin-service
   config:
-    import: optional:nacos:
+    import: "optional:nacos:"
   cloud:
     nacos:
       discovery:

@@ -5,7 +5,7 @@ spring:
   application:
     name: oa-gateway
   config:
-    import: optional:nacos:
+    import: "optional:nacos:"
   cloud:
     discovery:
       client:
