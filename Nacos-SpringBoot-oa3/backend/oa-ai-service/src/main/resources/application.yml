@@ -1,0 +1,69 @@
+server:
+  port: ${AI_SERVICE_PORT:18083}
+  servlet:
+    context-path: /api/v1/ai
+
+spring:
+  application:
+    name: oa-ai-service
+  datasource:
+    master:
+      jdbc-url: ${OA_DB_MASTER_URL:jdbc:mysql://127.0.0.1:3306/day?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+      username: ${OA_DB_USERNAME:oa_user}
+      password: ${OA_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      maximum-pool-size: 10
+      minimum-idle: 2
+    replica:
+      jdbc-url: ${OA_DB_REPLICA_URL:${OA_DB_MASTER_URL:jdbc:mysql://127.0.0.1:3306/day?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      username: ${OA_DB_USERNAME:oa_user}
+      password: ${OA_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      maximum-pool-size: 10
+      minimum-idle: 2
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2s
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://127.0.0.1:11434}
+      chat:
+        options:
+          model: ${OLLAMA_CHAT_MODEL:qwen2.5:7b}
+          temperature: 0.3
+      embedding:
+        options:
+          model: ${OLLAMA_EMBEDDING_MODEL:bge-m3}
+    vectorstore:
+      qdrant:
+        host: ${QDRANT_HOST:127.0.0.1}
+        port: ${QDRANT_GRPC_PORT:6334}
+        collection-name: ${QDRANT_COLLECTION:nexus_office_kb}
+        initialize-schema: true
+        use-tls: false
+  mvc:
+    async:
+      request-timeout: 120s
+
+oa:
+  # 服务间调用凭证；生产环境必须通过 OA_INTERNAL_TOKEN 覆盖
+  internal-token: ${OA_INTERNAL_TOKEN}
+  employee-service:
+    base-url: ${OA_EMP_SERVICE_URL:http://127.0.0.1:18080/api/v1/employee}
+  ai:
+    model: ${OLLAMA_CHAT_MODEL:qwen2.5:7b}
+    max-history-exchanges: 6
+    max-history-answer-chars: 12000
+    max-sessions: 1000
+    session-idle-timeout: 30m
+    session-cleanup-interval: 5m
+    max-concurrent-streams: ${AI_MAX_CONCURRENT_STREAMS:20}
+    retrieval-top-k: 4
+    vector-similarity-threshold: 0.60
+
+logging:
+  level:
+    com.oa.ai: info

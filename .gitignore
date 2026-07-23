@@ -1,0 +1,15 @@
+**/.idea/
+**/.vscode/
+**/.feisuan/
+*.iml
+**/target/
+**/node_modules/
+**/dist/
+**/logs/
+*.log
+*.local
+.env
+.env.*
+!.env.example
+~$*
+*.tsbuildinfo

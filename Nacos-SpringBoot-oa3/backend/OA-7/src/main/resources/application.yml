@@ -1,0 +1,90 @@
+spring:
+  application:
+    name: oa-admin-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+        group: DEFAULT_GROUP
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: public
+        group: DEFAULT_GROUP
+  thymeleaf:
+    suffix: .html
+    prefix: classpath:/templates/
+    cache: false
+    check-template-location: true
+    mode: HTML
+    enabled: true
+    encoding: UTF-8
+    check-template: true
+    servlet:
+      content-type: text/html;charset=utf-8
+    excluded-view-names:
+  datasource:
+    master:
+      url: ${OA_DB_MASTER_URL:jdbc:mysql://127.0.0.1:3306/day?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+      username: ${OA_DB_USERNAME:oa_user}
+      password: ${OA_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 20
+      min-idle: 10
+      max-active: 100
+    replica:
+      url: ${OA_DB_REPLICA_URL:${OA_DB_MASTER_URL:jdbc:mysql://127.0.0.1:3306/day?useSSL=false&useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}}
+      username: ${OA_DB_USERNAME:oa_user}
+      password: ${OA_DB_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 10
+      min-idle: 5
+      max-active: 60
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+    session:
+      timeout: 1800
+
+mybatis:
+  mapper-locations: classpath:mappers/*xml
+  type-aliases-package: com.oa7.pojo
+
+# Redis
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password:
+  maxTotal: 1000
+  maxIdle: 30
+  maxWait: 60
+  testOnBorrow: true
+
+# Elasticsearch 配置
+elasticsearch:
+  host: localhost
+  port: 9200
+
+attendance:
+  retention-months: ${ATTENDANCE_RETENTION_MONTHS:12}
+
+# 日志配置
+logging:
+  level:
+    com.oa7: debug
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n'
+
+server:
+  port: ${ADMIN_SERVICE_PORT:18082}
+  servlet:
+    context-path: /api/v1/admin
+
+# AI 服务地址（知识库变更后通知重载内存知识库）
+oa:
+  # 服务间调用凭证；生产环境必须通过 OA_INTERNAL_TOKEN 覆盖
+  internal-token: ${OA_INTERNAL_TOKEN}
+  ai-service:
+    base-url: ${OA_AI_SERVICE_BASE_URL:http://127.0.0.1:18080/api/v1/ai}

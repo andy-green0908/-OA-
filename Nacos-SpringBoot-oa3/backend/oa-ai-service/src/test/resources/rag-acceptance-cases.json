@@ -1,0 +1,42 @@
+[
+  {
+    "type": "keyword",
+    "question": "忘记打卡了要怎么补签",
+    "expectedQuestion": "忘记打卡漏签了怎么办"
+  },
+  {
+    "type": "semantic",
+    "question": "人在公司外面还能完成出勤登记吗",
+    "expectedQuestion": "可以异地签到吗"
+  },
+  {
+    "type": "semantic",
+    "question": "想休息一天应该走什么流程",
+    "expectedQuestion": "怎么请假"
+  },
+  {
+    "type": "semantic",
+    "question": "签到地址有偏差，和我实际所在地点对不上",
+    "expectedQuestion": "签到地址显示不准确怎么办"
+  },
+  {
+    "type": "semantic",
+    "question": "账号放着很久没操作，再使用时要求重新进入",
+    "expectedQuestion": "登录过期需要重新登录是为什么"
+  },
+  {
+    "type": "semantic",
+    "question": "我应该使用哪种网页工具打开这个系统",
+    "expectedQuestion": "系统支持哪些浏览器"
+  },
+  {
+    "type": "semantic",
+    "question": "怎样找到自己的员工编号",
+    "expectedQuestion": "工号是什么在哪里看"
+  },
+  {
+    "type": "unrelated",
+    "question": "怎么制造量子火箭",
+    "expectedQuestion": null
+  }
+]

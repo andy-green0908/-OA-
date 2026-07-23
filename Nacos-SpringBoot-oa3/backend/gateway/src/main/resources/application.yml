@@ -1,0 +1,65 @@
+server:
+  port: ${GATEWAY_PORT:18080}
+
+spring:
+  application:
+    name: oa-gateway
+  cloud:
+    discovery:
+      client:
+        simple:
+          instances:
+            # AI 服务是独立 Boot 3.x 异构服务，默认不注册到 Nacos。
+            # 网关使用 Spring Cloud LoadBalancer 的 simple discovery 管理 AI 实例。
+            # 本地单实例保持 18083；需要多实例时可在这里继续增加 uri。
+            oa-ai-service:
+              - uri: ${OA_AI_INSTANCE_1_URI:http://localhost:18083}
+              # - uri: http://localhost:18084
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: public
+        group: DEFAULT_GROUP
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+        namespace: public
+        group: DEFAULT_GROUP
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        # 员工服务路由
+        - id: emp-service
+          uri: lb://oa-emp-service
+          predicates:
+            - Path=/api/v1/employee/**
+        # 管理员服务路由
+        - id: admin-service
+          uri: lb://oa-admin-service
+          predicates:
+            - Path=/api/v1/admin/**
+        # AI 客服服务路由：通过 LoadBalancer 转发到 simple discovery 中的 oa-ai-service 实例。
+        # 如需改为外部负载均衡入口，可设置 OA_AI_SERVICE_URI=http://nginx-or-lb:port。
+        - id: ai-service
+          uri: ${OA_AI_SERVICE_URI:lb://oa-ai-service}
+          predicates:
+            - Path=/api/v1/ai/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            exposedHeaders: "*"
+
+# 日志配置
+logging:
+  level:
+    com.oa.gateway: debug
+    org.springframework.cloud.gateway: debug
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n' 
