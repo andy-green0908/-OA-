@@ -2,13 +2,14 @@ spring:
   application:
     name: oa-admin-service
   config:
-    import: "optional:nacos:"
+    import: "optional:nacos:oa-admin-service.yml"
   cloud:
     nacos:
       discovery:
         server-addr: localhost:8848
         namespace: public
         group: DEFAULT_GROUP
+        register-enabled: ${NACOS_DISCOVERY_REGISTER_ENABLED:false}
       config:
         server-addr: localhost:8848
         file-extension: yml
